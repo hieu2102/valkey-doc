@@ -656,9 +656,12 @@ Valkey replicas require the following commands to be allowed on the primary inst
 
 * PSYNC, REPLCONF, PING
 
-For cluster deployments, Valkey 9.0 introduces the Atomic Slot Migration feature, which requires the replication user to be allowed to run `CLUSTER SYNCSLOTS`.
-No keys need to be accessed, so this translates to the following rules:
+For cluster deployments, Valkey 9.0 introduces the Atomic Slot Migration feature, which requires additional permissions:
 
-    ACL setuser replica-user on >somepassword +psync +replconf +ping +cluster|syncslots
+* CLUSTER SYNCSLOTS, @write, SELECT
+
+This translate to the following rules:
+
+    ACL setuser replica-user on >somepassword +psync +replconf +ping +cluster|syncslots +@write +select ~*
 
 Note that you don't need to configure the replicas to allow the primary to be able to execute any set of commands. The primary is always authenticated as the root user from the point of view of replicas.
